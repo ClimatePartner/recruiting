@@ -8,24 +8,23 @@ class OffsetProjects {
             return "Invalid arguments";
         }
 
-        let matchedProject = null;
+        const projects = [...this.projects];
 
-        const filteredProjects = this.projects.filter((project) => {
+        let shouldAddProject = true;
+
+        for (const project of projects) {
             if (project.technology === technology && project.country === country) {
-                matchedProject = project;
-                return false;
+                project.offsetAmount += offsetAmount;
+                shouldAddProject = false;
+                break;
             }
-            return true;
-        });
-
-        if (matchedProject) {
-            this.projects = [
-                ...filteredProjects,
-                { ...matchedProject, offsetAmount: matchedProject.offsetAmount + offsetAmount },
-            ];
-        } else {
-            this.projects = [...filteredProjects, { technology, country, offsetAmount }];
         }
+
+        if (shouldAddProject) {
+            projects.push({ technology, country, offsetAmount });
+        }
+
+        this.projects = projects;
 
         return this.projects;
     }
@@ -35,7 +34,9 @@ class OffsetProjects {
             return "Invalid arguments";
         }
 
-        const matchedProjectIndex = this.projects.findIndex(
+        const projects = [...this.projects];
+
+        const matchedProjectIndex = projects.findIndex(
             (project) => project.technology === technology && project.country === country
         );
 
@@ -43,25 +44,21 @@ class OffsetProjects {
             return "This project does not exist";
         }
 
-        const newOffsetAmount = this.projects[matchedProjectIndex].offsetAmount - amount;
+        const newOffsetAmount = projects[matchedProjectIndex].offsetAmount - amount;
 
         if (newOffsetAmount < 0) {
             return "Project does not have enough available CO2";
         }
 
         if (newOffsetAmount === 0) {
-            this.projects = [
-                ...this.projects.slice(0, matchedProjectIndex),
-                ...this.projects.slice(matchedProjectIndex + 1, this.projects.length + 1),
-            ];
+            projects.splice(matchedProjectIndex, 1);
+            this.projects = projects;
+
             return this.projects;
         }
 
-        this.projects = [
-            ...this.projects.slice(0, matchedProjectIndex),
-            { ...this.projects[matchedProjectIndex], offsetAmount: newOffsetAmount },
-            ...this.projects.slice(matchedProjectIndex + 1, this.projects.length + 1),
-        ];
+        projects[matchedProjectIndex].offsetAmount = newOffsetAmount;
+        this.projects = projects;
 
         return this.projects;
     }
@@ -114,8 +111,8 @@ projects.add("Wind", "Germany", 2000);
 projects.add("Hydropower", "Congo", 6000);
 projects.add("Wind", "Austria", 1000);
 projects.add("Forest", "Germany", 500);
-projects.add("Wind", "Germany", 4000);
-projects.remove("Wind", "Germany", 6000);
+projects.add("Wind", "Austria", 4000);
+projects.remove("Wind", "Germany", 2000);
 projects.print();
 console.log(projects.getAvailableProjects({ technology: "Wind", minOffsetAmount: "500" }));
 console.log(projects.getNestedProjects());
