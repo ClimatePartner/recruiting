@@ -33,5 +33,5 @@ offset projects. Allowed time should be 45mins ~  60mins.
 - Do they know more than one way implementing something
 
 ## Grading
-Refer to the [grading rubric](grading-rubric.md)
+Refer to the [coding chanllenge scorecard](https://climatepartner.atlassian.net/wiki/spaces/DS/pages/745472095/Coding+Challenge+Scorecard)
 
