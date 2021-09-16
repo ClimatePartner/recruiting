@@ -9,7 +9,7 @@ describe("Add", () => {
         projects.add("Wind", "Austria", 1000);
         projects.add("Forest", "Germany", 500);
 
-        expect(projects.getProjects());
+        expect(projects.getProject("Wind", "Austria")).not.toBeUndefined();
     });
 
     it("Increases the amount when adding the same project", () => {});
